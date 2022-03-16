@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home.apps.HomeConfig', 
     'blog.apps.BlogConfig',
+    'store.apps.StoreConfig',
     'myresume.apps.MyresumeConfig',
     'django.contrib.humanize',
     'social',
-    'store',
     'ckeditor'
 ]
 
