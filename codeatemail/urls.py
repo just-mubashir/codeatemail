@@ -26,5 +26,5 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('store/', include('store.urls')),
     path('social/', include('social.urls')),
-    path('resume/', include('myresume.urls'))
+    path('myresume/', include('myresume.urls'))
 ]

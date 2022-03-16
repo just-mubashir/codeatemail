@@ -1,9 +1,9 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 
-# Create your views here.
+# # Create your views here.
 
-def index(request):
-    return render(request, 'myresume/resume.html')
+# def index(request):
+#     return render(request, 'myresume/resume.html')
 
 
 
@@ -24,7 +24,7 @@ from . forms import ContactForm
 
 
 class IndexView(generic.TemplateView):
-	template_name = "main/index.html"
+	template_name = "myresume/index.html"
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -42,7 +42,7 @@ class IndexView(generic.TemplateView):
 
 
 class ContactView(generic.FormView):
-	template_name = "main/contact.html"
+	template_name = "myresume/contact.html"
 	form_class = ContactForm
 	success_url = "/"
 	
@@ -54,7 +54,7 @@ class ContactView(generic.FormView):
 
 class PortfolioView(generic.ListView):
 	model = Portfolio
-	template_name = "main/portfolio.html"
+	template_name = "myresume/portfolio.html"
 	paginate_by = 10
 
 	def get_queryset(self):
@@ -63,11 +63,11 @@ class PortfolioView(generic.ListView):
 
 class PortfolioDetailView(generic.DetailView):
 	model = Portfolio
-	template_name = "main/portfolio-detail.html"
+	template_name = "myresume/portfolio-detail.html"
 
 class BlogView(generic.ListView):
 	model = Blog
-	template_name = "main/blog.html"
+	template_name = "myresume/blog.html"
 	paginate_by = 10
 	
 	def get_queryset(self):
@@ -76,4 +76,4 @@ class BlogView(generic.ListView):
 
 class BlogDetailView(generic.DetailView):
 	model = Blog
-	template_name = "main/blog-detail.html"
+	template_name = "myresume/blog-detail.html"
