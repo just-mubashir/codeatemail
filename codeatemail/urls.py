@@ -22,8 +22,9 @@ admin.site.index_title="Welcome to Code@Email Admin Panel"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('blog/', include('blog.urls')),
     path('', include('home.urls')),
+    path('blog/', include('blog.urls')),
     path('store/', include('store.urls')),
-    path('social/', include('social.urls'))
+    path('social/', include('social.urls')),
+    path('resume/', include('myresume.urls'))
 ]

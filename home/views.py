@@ -107,6 +107,3 @@ def handelLogout(request):
 
 def about(request): 
     return render(request, "home/about.html")
-
-def resume(request):
-    return render(request, 'home/resume.html')
