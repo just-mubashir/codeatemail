@@ -6,8 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from PayTm import Checksum
 # Create your views here.
 from django.http import HttpResponse
-
 MERCHANT_KEY = 'Your-Merchant-Key-Here'
+
 def index(request):
     allProds = []
     catprods = Product.objects.values('category', 'id')
@@ -20,21 +20,9 @@ def index(request):
     params = {'allProds':allProds}
     return render(request, 'store/index.html', params)
 
-def contact(request):
-    thank=False
-    if request.method=="POST":
-        name = request.POST.get('name', '')
-        email = request.POST.get('email', '')
-        phone = request.POST.get('phone', '')
-        desc = request.POST.get('desc', '')
-        contact = Contact(name=name, email=email, phone=phone, desc=desc)
-        contact.save()
-        thank=True
-    return render(request, 'store/contact.html', {'thank':thank})
-
 def searchMatch(query, item):
     '''return true only if query matches the item'''
-    if query in item.description.lower() or query in item.product_name.lower() or query in item.category.lower():
+    if query in item.desc.lower() or query in item.product_name.lower() or query in item.category.lower():
         return True
     else:
         return False
@@ -57,6 +45,21 @@ def search(request):
         params = {'msg': "Please make sure to enter relevant search query"}
     return render(request, 'store/search.html', params)
 
+def about(request):
+    return render(request, 'store/about.html')
+
+def contact(request):
+    thank = False
+    if request.method=="POST":
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        phone = request.POST.get('phone', '')
+        desc = request.POST.get('desc', '')
+        contact = Contact(name=name, email=email, phone=phone, desc=desc)
+        contact.save()
+        thank = True
+    return render(request, 'store/contact.html', {'thank': thank})
+
 def tracker(request):
     if request.method=="POST":
         orderId = request.POST.get('orderId', '')
@@ -77,6 +80,12 @@ def tracker(request):
 
     return render(request, 'store/tracker.html')
 
+def productView(request, myid):
+
+    # Fetch the product using the id
+    product = Product.objects.filter(id=myid)
+    return render(request, 'store/prodView.html', {'product':product[0]})
+
 def checkout(request):
     if request.method=="POST":
         items_json = request.POST.get('itemsJson', '')
@@ -95,7 +104,7 @@ def checkout(request):
         update.save()
         thank = True
         id = order.order_id
-        return render(request, 'store/checkout.html', {'thank':thank, 'id': id})
+        # return render(request, 'store/checkout.html', {'thank':thank, 'id': id})
         # Request paytm to transfer the amount to your account after payment by user
         param_dict = {
 
@@ -114,7 +123,6 @@ def checkout(request):
 
     return render(request, 'store/checkout.html')
 
-
 @csrf_exempt
 def handlerequest(request):
     # paytm will send you post request here
@@ -132,12 +140,3 @@ def handlerequest(request):
         else:
             print('order was not successful because' + response_dict['RESPMSG'])
     return render(request, 'store/paymentstatus.html', {'response': response_dict})
-
-
-def about(request):
-    return render(request, "store/about.html")
-
-def productview(request, myid):
-    # Fetch the product using the id
-    product = Product.objects.filter(id=myid)
-    return render(request, 'store/productview.html', {'product':product[0]})
