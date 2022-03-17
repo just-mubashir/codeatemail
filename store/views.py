@@ -3,16 +3,11 @@ from . models import Product, Orders, OrderUpdate, Contact
 from math import ceil
 import json
 from django.views.decorators.csrf import csrf_exempt
-# from PayTm import Checksum
+from PayTm import Checksum
 from django.http import HttpResponse
 
-# MERCHANT_KEY = 'Your-Merchant-Key-Here'
+MERCHANT_KEY = 'Your-Merchant-Key-Here'
 def index(request):
-    # products = Product.objects.all()
-    # print(products)
-    # n = len(products)
-    # nSlides = n//4 + ceil((n/4)-(n//4))
-
     allProds = []
     catprods = Product.objects.values('category', 'id')
     cats = {item['category'] for item in catprods}
@@ -21,13 +16,8 @@ def index(request):
         n = len(prod)
         nSlides = n // 4 + ceil((n / 4) - (n // 4))
         allProds.append([prod, range(1, nSlides), nSlides])
-
-    # params = {'no_of_slides':nSlides, 'range': range(1,nSlides),'product': products}
-    # allProds = [[products, range(1, nSlides), nSlides],
-    #             [products, range(1, nSlides), nSlides]]
     params = {'allProds':allProds}
     return render(request, 'store/index.html', params)
-
 
 def contact(request):
     thank=False
@@ -40,10 +30,6 @@ def contact(request):
         contact.save()
         thank=True
     return render(request, 'store/contact.html', {'thank':thank})
-
-
-
-
 
 def searchMatch(query, item):
     '''return true only if query matches the item'''
@@ -70,11 +56,6 @@ def search(request):
         params = {'msg': "Please make sure to enter relevant search query"}
     return render(request, 'store/search.html', params)
 
-
-
-
-
-
 def tracker(request):
     if request.method=="POST":
         orderId = request.POST.get('orderId', '')
@@ -95,7 +76,6 @@ def tracker(request):
 
     return render(request, 'store/tracker.html')
 
-
 def checkout(request):
     if request.method=="POST":
         items_json = request.POST.get('itemsJson', '')
@@ -114,7 +94,7 @@ def checkout(request):
         update.save()
         thank = True
         id = order.order_id
-        # return render(request, 'store/checkout.html', {'thank':thank, 'id': id})
+        return render(request, 'store/checkout.html', {'thank':thank, 'id': id})
         # Request paytm to transfer the amount to your account after payment by user
         param_dict = {
 
@@ -128,33 +108,31 @@ def checkout(request):
                 'CALLBACK_URL':'http://127.0.0.1:8000/store/handlerequest/',
 
         }
-        # param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
+        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
         return render(request, 'store/paytm.html', {'param_dict': param_dict})
 
     return render(request, 'store/checkout.html')
 
+@csrf_exempt
+def handlerequest(request):
+    # paytm will send you post request here
+    form = request.POST
+    response_dict = {}
+    for i in form.keys():
+        response_dict[i] = form[i]
+        if i == 'CHECKSUMHASH':
+            checksum = form[i]
 
-# @csrf_exempt
-# def handlerequest(request):
-#     # paytm will send you post request here
-#     form = request.POST
-#     response_dict = {}
-#     for i in form.keys():
-#         response_dict[i] = form[i]
-#         if i == 'CHECKSUMHASH':
-#             checksum = form[i]
-
-    # verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
-    # if verify:
-    #     if response_dict['RESPCODE'] == '01':
-    #         print('order successful')
-    #     else:
-    #         print('order was not successful because' + response_dict['RESPMSG'])
-    # return render(request, 'store/paymentstatus.html', {'response': response_dict})
+    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+    if verify:
+        if response_dict['RESPCODE'] == '01':
+            print('order successful')
+        else:
+            print('order was not successful because' + response_dict['RESPMSG'])
+    return render(request, 'store/paymentstatus.html', {'response': response_dict})
 
 def about(request):
     return render(request, "store/about.html")
-
 
 def productview(request, myid):
     # Fetch the product using the id
