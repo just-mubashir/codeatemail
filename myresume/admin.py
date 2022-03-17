@@ -10,6 +10,7 @@ from . models import (
     Skill
     )
 
+
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
 	list_display = ('id', 'user')

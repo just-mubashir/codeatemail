@@ -7,18 +7,15 @@ from ckeditor.fields import RichTextField
 class Skill(models.Model):
     class Meta:
         verbose_name_plural = 'Skills'
-        verbose_name = 'Skill'
-    
+        verbose_name = 'Skill'    
     name = models.CharField(max_length=20, blank=True, null=True)
     score = models.IntegerField(default=80, blank=True, null=True)
     image = models.FileField(blank=True, null=True, upload_to="skills")
     is_key_skill = models.BooleanField(default=False)
-    
     def __str__(self):
         return self.name
 
 class UserProfile(models.Model):
-
     class Meta:
         verbose_name_plural = 'User Profiles'
         verbose_name = 'User Profile'
@@ -32,7 +29,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
-
 
 class ContactProfile(models.Model):
     
@@ -48,10 +44,7 @@ class ContactProfile(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-
-
 class Testimonial(models.Model):
-
     class Meta:
         verbose_name_plural = 'Testimonials'
         verbose_name = 'Testimonial'
@@ -66,14 +59,11 @@ class Testimonial(models.Model):
     def __str__(self):
         return self.name
 
-
 class Media(models.Model):
-
     class Meta:
         verbose_name_plural = 'Media Files'
         verbose_name = 'Media'
         ordering = ["name"]
-	
     image = models.ImageField(blank=True, null=True, upload_to="media")
     url = models.URLField(blank=True, null=True)
     name = models.CharField(max_length=200, blank=True, null=True)
@@ -87,7 +77,6 @@ class Media(models.Model):
         return self.name
 
 class Portfolio(models.Model):
-
     class Meta:
         verbose_name_plural = 'Portfolio Profiles'
         verbose_name = 'Portfolio'
@@ -111,9 +100,7 @@ class Portfolio(models.Model):
     def get_absolute_url(self):
         return f"/portfolio/{self.slug}"
 
-
 class Blog(models.Model):
-
     class Meta:
         verbose_name_plural = 'Blog Profiles'
         verbose_name = 'Blog'
@@ -139,13 +126,10 @@ class Blog(models.Model):
     def get_absolute_url(self):
         return f"/blog/{self.slug}"
 
-
 class Certificate(models.Model):
-
     class Meta:
         verbose_name_plural = 'Certificates'
         verbose_name = 'Certificate'
-
     date = models.DateTimeField(blank=True, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
     title = models.CharField(max_length=200, blank=True, null=True)
