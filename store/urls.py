@@ -1,6 +1,4 @@
-from django.contrib import admin
-from django.urls import path, include
-# from django.conf.urls import handler400
+from django.urls import path
 from . import views
 
 urlpatterns = [

@@ -1,8 +1,8 @@
+# pip install pycryptodome
 import base64
 import string
 import random
 import hashlib
-# from .PaytmChecksum import generateSignature, verifySignature, encrypt, 
 
 from Crypto.Cipher import AES
 

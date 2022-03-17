@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from . models import Product, Orders, OrderUpdate, Contact
+from .models import Product, Contact, Orders, OrderUpdate
 from math import ceil
 import json
 from django.views.decorators.csrf import csrf_exempt
 from PayTm import Checksum
+# Create your views here.
 from django.http import HttpResponse
 
 MERCHANT_KEY = 'Your-Merchant-Key-Here'
@@ -113,6 +114,7 @@ def checkout(request):
 
     return render(request, 'store/checkout.html')
 
+
 @csrf_exempt
 def handlerequest(request):
     # paytm will send you post request here
@@ -130,6 +132,7 @@ def handlerequest(request):
         else:
             print('order was not successful because' + response_dict['RESPMSG'])
     return render(request, 'store/paymentstatus.html', {'response': response_dict})
+
 
 def about(request):
     return render(request, "store/about.html")
